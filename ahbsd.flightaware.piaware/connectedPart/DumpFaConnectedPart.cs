@@ -12,8 +12,6 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -35,10 +33,15 @@ namespace ahbsd.flightaware.piaware.connectedPart
         public uint Port { get; private set; }
         #endregion
 
+        /// <summary>
+        /// Gets a <see cref="IDumpFaConnectedPart"/> from the given text line and an already existing <see cref="IStatusContent"/>.
+        /// </summary>
+        /// <param name="line">The given text line</param>
+        /// <param name="statusContent">An existing status content</param>
+        /// <returns>A IDumpFaConnected Part</returns>
+        /// <exception cref="WrongModuleTypeException">If the current Line isn't of <see cref="PiAwareModule.dump1090_fa"/> or <see cref="PiAwareModule.dump978_fa"/>.</exception>
         public static IDumpFaConnectedPart GetDumpFaConnectedPart(string line, IStatusContent statusContent)
         {
-            IDumpFaConnectedPart result = null;
-
             IModule dump1090 = null;
             IModule dump978 = null;
             foreach (var module in statusContent.Modules)
@@ -71,17 +74,16 @@ namespace ahbsd.flightaware.piaware.connectedPart
                     throw wrongModule;
             }
 
-            result = new DumpFaConnectedPart(currentModule, line);
-
-            return result;
+            return new DumpFaConnectedPart(currentModule, line);
         }
 
         private static PiAwareModule InterpreteModuleType(string line)
         {
-            PiAwareModule result = PiAwareModule.unknown;
+            // dump1090-fa (pid 3739) is listening for ES connections on port 30005.
 
+            string[] parts = line.Split(' ');
 
-            return result;
+            return ConvertPiAwareModule.FromString(parts.First());
         }
     }
 }
