@@ -14,6 +14,9 @@
 //    limitations under the License.
 namespace ahbsd.flightaware.piaware
 {
+    /// <summary>
+    /// An interface for connected into.
+    /// </summary>
     public interface IConnected
     {
         /// <summary>
@@ -34,7 +37,7 @@ namespace ahbsd.flightaware.piaware
     }
 
     /// <summary>
-    /// An interface for connected info.
+    /// A generic interface for connected info.
     /// </summary>
     public interface IConnected<CP> : IConnected where CP : connectedPart.IConnectedPart
     {
