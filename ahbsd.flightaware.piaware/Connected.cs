@@ -12,17 +12,15 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-using System.Buffers.Text;
-using System.Runtime.CompilerServices;
+using System.Linq;
 using ahbsd.flightaware.piaware.connectedPart;
 namespace ahbsd.flightaware.piaware
 {
-    internal abstract class Connected
+    internal class Connected : IConnected
     {
         protected Connected(IModule module)
         {
             Module = module;
-            ModuleType = module.ModuleType;
             IsConnected = false;
         }
 
@@ -31,7 +29,7 @@ namespace ahbsd.flightaware.piaware
         /// Gets the module type.
         /// </summary>
         /// <value>The module type</value>
-        public PiAwareModule ModuleType { get; private set; }
+        public PiAwareModule ModuleType => Module.ModuleType;
         /// <summary>
         /// Is the module connected?
         /// </summary>
@@ -44,10 +42,22 @@ namespace ahbsd.flightaware.piaware
         public IModule Module { get; private set; }
         #endregion
 
-        public static IConnected GetConnected(string line)
+        public static IConnected GetConnected(string line, IStatusContent statusContent=null)
         {
             IConnected result = null;
-
+            /*
+            dump1090-fa (pid 3739) is listening for ES connections on port 30005.
+            faup1090 is connected to the ADS-B receiver.
+            piaware is connected to FlightAware.
+            */
+            if (statusContent != null)
+            {
+                PiAwareModule moduleType = ConvertPiAwareModule.FromString(line.Split(' ').First());
+                foreach (var module in statusContent.Modules.Where(module => module.ModuleType.Equals(moduleType)))
+                {
+                    result = new Connected(module);
+                }
+            }
 
             return result;
         }
@@ -69,27 +79,36 @@ namespace ahbsd.flightaware.piaware
         public CP Part { get; protected internal set; }
         #endregion
 
-        public static new IConnected<CP> GetConnected(string line)
+        public static IConnected<CP> GetConnected(string line, IStatusContent statusContent, CP part=default)
         {
-            IConnected<CP> result = (IConnected<CP>)Connected.GetConnected(line);
-            IConnectedPart part;
+            IConnected simpleResult = Connected.GetConnected(line, statusContent);
+            IConnected<CP> result = null;
+
+            try
+            {
+                result = (IConnected<CP>)simpleResult;
+            }
+            catch (System.Exception)
+            {
+                result = new Connected<CP>(simpleResult.Module);
+            }
 
             switch (result.ModuleType)
             {
                 case PiAwareModule.dump1090_fa:
                 case PiAwareModule.dump978_fa:
-                    part = (IDumpFaConnectedPart)null;
+                    part = (CP)DumpFaConnectedPart.GetDumpFaConnectedPart(line, statusContent);
                     break;
                 case PiAwareModule.piaware:
                     break;
                 case PiAwareModule.faup1090:
-                    break;
                 case PiAwareModule.faup978:
                     break;
                 default:
                     break;
             }
-
+            
+            ((Connected<CP>)result).Part = part;
             return result;
         }
     }
