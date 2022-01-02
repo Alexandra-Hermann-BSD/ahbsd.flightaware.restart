@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ahbsd.flightaware.fr24\ahbsd.flightaware.fr24.csproj" />
+    <ProjectReference Include="..\ahbsd.flightaware.piaware\ahbsd.flightaware.piaware.csproj" />
+  </ItemGroup>
+</Project>
