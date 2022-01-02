@@ -19,6 +19,9 @@ using System.Linq;
 
 namespace ahbsd.flightaware.piaware
 {
+    /// <summary>
+    /// A class that holds the status content for the piaware status
+    /// </summary>
     public class StatusContent : IStatusContent
     {
         /// <summary>
@@ -28,6 +31,9 @@ namespace ahbsd.flightaware.piaware
         [ReadOnly(true)]
         protected internal IList<string> Lines { get; private set; }
 
+        /// <summary>
+        /// The content directory to handle all the read in lines.
+        /// </summary>
         private readonly IDictionary<LineType, IList<string>> contentDictionary;
 
         /// <summary>
@@ -44,6 +50,7 @@ namespace ahbsd.flightaware.piaware
             SetParts();
         }
 
+        #region private methods to handle the imported data
         /// <summary>
         /// Fills the content directory
         /// </summary>
@@ -51,8 +58,10 @@ namespace ahbsd.flightaware.piaware
         private void FillContentDictionary(string content)
         {
             char[] splitChars = { '\r', '\n' };
-            string[] lines = content.Split(splitChars, StringSplitOptions.None);
-            foreach ((string line, LineType lineType) in from string line in lines
+            Lines = content.Split(splitChars, StringSplitOptions.None)
+                           .ToList()
+                           .AsReadOnly();
+            foreach ((string line, LineType lineType) in from string line in Lines
                                              let lineType = PreInterpreteLine(line)
                                              select (line, lineType))
             {
@@ -86,7 +95,7 @@ namespace ahbsd.flightaware.piaware
                     case LineType.Connected:
                         foreach (string line in item.Value)
                         {
-
+                            AddConnected(line);
                         }
                         break;
                     case LineType.DumpUri:
@@ -98,6 +107,51 @@ namespace ahbsd.flightaware.piaware
                 }
             }
         }
+
+        private void AddConnected(string line)
+        {
+            /*
+            dump1090-fa (pid 3739) is listening for ES connections on port 30005.
+            faup1090 is connected to the ADS-B receiver.
+            piaware is connected to FlightAware.
+             */
+            IList<string> lineParts = line.Split(' ').ToList().AsReadOnly();
+            PiAwareModule module = ConvertPiAwareModule.FromString(lineParts[0]);
+            IConnected<connectedPart.IConnectedPart> connected = null;
+
+
+            switch (module)
+            {
+                case PiAwareModule.dump978_fa:
+                case PiAwareModule.dump1090_fa:
+                    try
+                    {
+                        connected = (IConnected<connectedPart.IConnectedPart>)Connected<connectedPart.IDumpFaConnectedPart>.GetConnected(line, this);
+                    }
+                    catch (Exception)
+                    {
+                        //
+                    }
+                    break;
+                case PiAwareModule.faup978:
+                case PiAwareModule.faup1090:
+
+                    break;
+                case PiAwareModule.piaware:
+
+                    break;
+                default:
+                    connected = null;
+                    break;
+            }
+
+            if (connected != null)
+            {
+                
+                Connected.Add(connected);
+            }
+        }
+        #endregion
 
         #region implementation of IStatusContent
         /// <summary>
@@ -135,6 +189,7 @@ namespace ahbsd.flightaware.piaware
         public Uri DumpUri { get; private set; }
         #endregion
 
+        #region private static functions to handle given data
         /// <summary>
         /// Gets the feeder id from a given line.
         /// </summary>
@@ -144,7 +199,7 @@ namespace ahbsd.flightaware.piaware
         /// line = "Your feeder ID is 335bb436-4746-41d3-81b1-ce05b8ba8ecb (from /var/cache/piaware/feeder_id)";<br />
         /// result = {335bb436-4746-41d3-81b1-ce05b8ba8ecb};
         /// </example>
-        private Guid GetFeederID(string line)
+        private static Guid GetFeederID(string line)
         {
             string firstPart = "Your feeder ID is ";
             int firstLength = firstPart.Length;
@@ -180,6 +235,7 @@ namespace ahbsd.flightaware.piaware
             }
             UriBuilder uriBuilder = new UriBuilder
             {
+                Scheme = "",
                 Host = host,
                 Port = port
             };
@@ -219,5 +275,6 @@ namespace ahbsd.flightaware.piaware
             }
             return lineType;
         }
+        #endregion
     }
 }
