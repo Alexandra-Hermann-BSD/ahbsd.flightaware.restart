@@ -23,6 +23,10 @@ namespace ahbsd.flightaware.piawareTest
     {
         [Theory]
         [InlineData("../../../statusOK.txt", false, true)]
+        [InlineData("../../../status-piaware-2022-01-02.txt", false, true)]
+        [InlineData("../../../status-piaware-2022-01-03_0719.txt", true, true)]
+        [InlineData("../../../status-piaware-2022-01-03_0723.txt", true, true)]
+        [InlineData("../../../status-piaware-2022-01-03_0727.txt", false, true)]
         public void ImportTest(string fileName, bool critical, bool existingFeederId)
         {
             FileInfo testFile = new FileInfo(fileName);

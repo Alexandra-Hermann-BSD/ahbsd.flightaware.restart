@@ -1,0 +1,14 @@
+PiAware master process (piaware) is running with pid 16124.
+PiAware ADS-B client (faup1090) is not running.
+PiAware ADS-B UAT client (faup978) is not running (disabled by configuration settings)
+PiAware mlat client (fa-mlat-client) is not running.
+Local ADS-B receiver (dump1090) is not running.
+
+no program appears to be listening for ES connections on port 30005.
+faup1090 is NOT connected to the ADS-B receiver.
+piaware is connected to FlightAware.
+
+got 'couldn't open socket: connection refused'
+dump1090 is NOT producing data on localhost:30005.
+
+Your feeder ID is 335bb436-4746-41d3-81b1-ce05b8ba8ecb (from /var/cache/piaware/feeder_id)
