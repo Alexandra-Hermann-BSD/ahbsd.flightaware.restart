@@ -18,11 +18,14 @@ namespace ahbsd.flightaware.piaware
 {
     internal class Connected : IConnected
     {
+        protected internal static readonly char[] BRACKET_SPLITTER = new char[2]{ '(', ')' };
+        protected internal static readonly char[] EMPTY_SPLITTER = new char[1] { ' ' };
+
         protected Connected(IModule module)
         {
             Module = module;
-            IsConnected = false;
         }
+
 
         #region implementation of IConnected
         /// <summary>
@@ -44,18 +47,32 @@ namespace ahbsd.flightaware.piaware
 
         public static IConnected GetConnected(string line, IStatusContent statusContent=null)
         {
-            IConnected result = null;
+            Connected result = null;
             /*
             dump1090-fa (pid 3739) is listening for ES connections on port 30005.
             faup1090 is connected to the ADS-B receiver.
             piaware is connected to FlightAware.
             */
-            if (statusContent != null)
+            if (statusContent != null && !string.IsNullOrEmpty(line))
             {
-                PiAwareModule moduleType = ConvertPiAwareModule.FromString(line.Split(' ').First());
+                PiAwareModule moduleType = ConvertPiAwareModule.FromString(line.Split(EMPTY_SPLITTER).First());
                 foreach (var module in statusContent.Modules.Where(module => module.ModuleType.Equals(moduleType)))
                 {
                     result = new Connected(module);
+                }
+
+                if (result != null)
+                {
+                    switch (moduleType)
+                    {
+                        case PiAwareModule.piaware:
+                        case PiAwareModule.faup1090:
+                        case PiAwareModule.faup978:
+                            result.IsConnected = line.Contains("is connected to");
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
 
