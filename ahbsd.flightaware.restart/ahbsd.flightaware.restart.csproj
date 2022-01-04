@@ -9,4 +9,10 @@
     <ProjectReference Include="..\ahbsd.flightaware.fr24\ahbsd.flightaware.fr24.csproj" />
     <ProjectReference Include="..\ahbsd.flightaware.piaware\ahbsd.flightaware.piaware.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="ahbsd.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ahbsd.lib" Version="1.4.0" />
+  </ItemGroup>
 </Project>
