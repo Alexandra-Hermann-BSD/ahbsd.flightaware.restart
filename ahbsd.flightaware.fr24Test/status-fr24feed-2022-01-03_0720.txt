@@ -1,0 +1,5 @@
+FR24 Feeder/Decoder Process: running.
+FR24 Stats Timestamp: 2022-01-03 06:20:11.
+FR24 Link: unknown ... failed!
+Receiver: down ... failed!
+FR24 MLAT: not running ... failed!

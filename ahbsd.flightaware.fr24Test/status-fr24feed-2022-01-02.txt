@@ -1,0 +1,5 @@
+FR24 Feeder/Decoder Process: running.
+FR24 Stats Timestamp: 2022-01-02 02:24:05.
+FR24 Link: unknown ... failed!
+Receiver: connected (2113161 MSGS/0 SYNC).
+FR24 MLAT: not running ... failed!
