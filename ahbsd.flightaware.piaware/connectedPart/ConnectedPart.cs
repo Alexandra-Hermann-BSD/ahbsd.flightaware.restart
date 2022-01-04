@@ -12,11 +12,18 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-using System;
 namespace ahbsd.flightaware.piaware.connectedPart
 {
+    /// <summary>
+    /// Abstract class for basics of <see cref="IConnectedPart"/>s
+    /// </summary>
     internal abstract class ConnectedPart : Connected, IConnectedPart
     {
+        /// <summary>
+        /// Constructor for child classes.
+        /// </summary>
+        /// <param name="module">The given module.</param>
+        /// <param name="line">The source text line</param>
         protected ConnectedPart(IModule module, string line)
             : base(module)
         {
