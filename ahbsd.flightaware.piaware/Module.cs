@@ -30,6 +30,19 @@ namespace ahbsd.flightaware.piaware
         /// Currently the string for, which process id a module has
         /// </summary>
         public const string WITH_PID = "with pid ";
+        /// <summary>
+        /// The character array for brackets as splitter
+        /// </summary>
+        /// <remarks>An array can't be a constant... so it is static readonly...</remarks>
+        /// <example>
+        /// string helloUglyWorld = "Hello (ugly) world";<br/>
+        /// string[] splitted = helloUglyWorld.Split(BRACKET_SPLITTER);<br/>
+        /// // would be<br/>
+        /// // splitted[0] = "Hello "<br/>
+        /// // splitted[1] = "ugly"<br/>
+        /// // splitted[2] = " world"<br/>
+        /// </example>
+        public static readonly char[] BRACKET_SPLITTER = { '(', ')' };
 
         /// <summary>
         /// a simple constructor, that fills the variables with default walues
@@ -87,8 +100,7 @@ namespace ahbsd.flightaware.piaware
         /// </summary>
         protected void InterpreteLine()
         {
-            char[] splitArr = { '(', ')' };
-            string[] parts = InputLine.Split(splitArr);
+            string[] parts = InputLine.Split(BRACKET_SPLITTER);
             if (parts.Length >= 3)
             {
                 ModuleType = GetModuleType(parts[1]);
@@ -107,7 +119,7 @@ namespace ahbsd.flightaware.piaware
         /// Gets the module type from a given string. 
         /// </summary>
         /// <param name="name">The given string</param>
-        /// <returns>The module type</returns>
+        /// <returns>The module type</returns>        
         protected static PiAwareModule GetModuleType(string name)
         {
             PiAwareModule result;
@@ -120,30 +132,6 @@ namespace ahbsd.flightaware.piaware
             catch (Exception)
             {
                 result = PiAwareModule.unknown;
-            }
-
-            // shouldn't happen...
-            if (result.Equals(PiAwareModule.unknown))
-            {
-                switch (name)
-                {
-                    case "fa-mlat - client":
-                    case "fa-mlat-client":
-                        result = PiAwareModule.fa_mlat_client;
-                        break;
-                    case "dump1090 - fa":
-                    case "dump1090-fa":
-                        result = PiAwareModule.dump1090_fa;
-                        break;
-                    case "dump978 - fa":
-                    case "dump978-fa":
-                        result = PiAwareModule.dump978_fa;
-                        break;
-                    default:
-                        result = PiAwareModule.unknown;
-                        break;
-                }
-
             }
 
             return result;
