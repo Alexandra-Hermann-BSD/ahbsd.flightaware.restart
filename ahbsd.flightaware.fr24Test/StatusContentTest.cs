@@ -21,7 +21,14 @@ namespace ahbsd.flightaware.fr24Test
     public class StatusContentTest
     {
         [Theory]
-        [InlineData("../../../status-fr24feed-2022-01-02.txt", false, true)]
+        [InlineData("../../../status-fr24feed-2022-01-02.txt", true, true)]
+        [InlineData("../../../status-fr24feed-2022-01-02_12:27.txt", true, true)]
+        [InlineData("../../../status-fr24feed-2022-01-02_12:28.txt", false, true)]
+        [InlineData("../../../status-fr24feed-2022-01-03_0720.txt", true, true)]
+        [InlineData("../../../status-fr24feed-2022-01-03_0724.txt", true, true)]
+        [InlineData("../../../status-fr24feed-2022-01-03_0727.txt", true, true)]
+        [InlineData("../../../status-fr24feed-2022-01-03_0729.txt", false, true)]
+        [InlineData("../../../status-fr24feed-now.txt", false, true)]
         public void ImportTest(string fileName, bool critical, bool existingFeederId)
         {
             FileInfo testFile = new FileInfo(fileName);
