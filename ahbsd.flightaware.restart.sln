@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ahbsd.flightaware.piawareTe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ahbsd.flightaware.fr24Test", "ahbsd.flightaware.fr24Test\ahbsd.flightaware.fr24Test.csproj", "{BDF4E8D1-F525-457C-ACC7-B47F9CEF6EF5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ahbsd.lib.flight", "ahbsd.lib.flight\ahbsd.lib.flight.csproj", "{244F8702-E335-471A-9A78-D6E9579F925D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{BDF4E8D1-F525-457C-ACC7-B47F9CEF6EF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BDF4E8D1-F525-457C-ACC7-B47F9CEF6EF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BDF4E8D1-F525-457C-ACC7-B47F9CEF6EF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{244F8702-E335-471A-9A78-D6E9579F925D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{244F8702-E335-471A-9A78-D6E9579F925D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{244F8702-E335-471A-9A78-D6E9579F925D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{244F8702-E335-471A-9A78-D6E9579F925D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

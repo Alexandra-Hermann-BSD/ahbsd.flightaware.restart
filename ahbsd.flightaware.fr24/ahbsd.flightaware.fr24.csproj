@@ -10,4 +10,7 @@
   <ItemGroup>
     <PackageReference Include="ahbsd.lib" Version="1.4.0" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ahbsd.lib.flight\ahbsd.lib.flight.csproj" />
+  </ItemGroup>
 </Project>
