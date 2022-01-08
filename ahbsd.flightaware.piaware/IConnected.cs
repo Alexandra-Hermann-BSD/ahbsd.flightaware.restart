@@ -39,12 +39,12 @@ namespace ahbsd.flightaware.piaware
     /// <summary>
     /// A generic interface for connected info.
     /// </summary>
-    public interface IConnected<CP> : IConnected where CP : connectedPart.IConnectedPart
+    public interface IConnected<out TCp> : IConnected where TCp : connectedPart.IConnectedPart
     {
         /// <summary>
         /// Gets the connected part.
         /// </summary>
         /// <value>The connected part</value>
-        CP Part { get; }
+        TCp Part { get; }
     }
 }

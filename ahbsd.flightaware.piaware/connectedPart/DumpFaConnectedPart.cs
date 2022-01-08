@@ -68,8 +68,8 @@ namespace ahbsd.flightaware.piaware.connectedPart
                     break;
                 default:
                     IList<PiAwareModule> expectedModules = new List<PiAwareModule>();
-                    expectedModules.Append(PiAwareModule.dump1090_fa);
-                    expectedModules.Append(PiAwareModule.dump978_fa);
+                    _ = expectedModules.Append(PiAwareModule.dump1090_fa);
+                    _ = expectedModules.Append(PiAwareModule.dump978_fa);
                     WrongModuleTypeException wrongModule = new WrongModuleTypeException(expectedModules, InterpreteModuleType(line), line);
                     throw wrongModule;
             }

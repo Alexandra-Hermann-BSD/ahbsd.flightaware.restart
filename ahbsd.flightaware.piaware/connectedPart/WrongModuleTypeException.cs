@@ -14,12 +14,19 @@
 //    limitations under the License.
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace ahbsd.flightaware.piaware.connectedPart
 {
+    [Serializable]
     public class WrongModuleTypeException : Exception
     {
+        protected WrongModuleTypeException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+            
+        }
         public WrongModuleTypeException(PiAwareModule expected, PiAwareModule given, string line)
             : base($"The given line is not a '{expected}'! The given module type is '{given}'.")
         {
