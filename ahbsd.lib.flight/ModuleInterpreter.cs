@@ -82,10 +82,7 @@ namespace ahbsd.lib.flight
         public string InputLine
         {
             get => inputLine;
-            private set
-            {
-                inputLine = InterpreteInputLine(value);
-            }
+            private set => inputLine = InterpreteInputLine(value);
         }
         /// <summary>
         /// Gets the module type.
@@ -101,11 +98,9 @@ namespace ahbsd.lib.flight
             get => isRunning;
             protected set
             {
-                ChangeEventArgs<bool> cea;
-
                 if (value != isRunning)
                 {
-                    cea = new ChangeEventArgs<bool>(isRunning, value);
+                    ChangeEventArgs<bool> cea = new ChangeEventArgs<bool>(isRunning, value);
                     isRunning = value;
                     OnRunningChanged?.Invoke(this, cea);
                 }
@@ -139,7 +134,8 @@ namespace ahbsd.lib.flight
             protected set
             {
                 ChangeEventArgs<string> cea;
-                if ((value == null && !string.IsNullOrEmpty(notice)) || (!string.IsNullOrEmpty(value) && !value.Equals(notice)))
+                if (value == null && !string.IsNullOrEmpty(notice) 
+                    || !string.IsNullOrEmpty(value) && !value.Equals(notice))
                 {
                     cea = new ChangeEventArgs<string>(notice, value);
                     notice = value;
