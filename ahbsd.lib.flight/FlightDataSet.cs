@@ -37,11 +37,10 @@ namespace ahbsd.lib.flight
         /// </summary>
         private void CreatePingTable()
         {
-            DataColumn column;
             DataTable pingTable = new DataTable("ping");
 
             // PK Column pID
-            column = new DataColumn()
+            DataColumn column = new DataColumn()
             {
                 ColumnName = "pID",
                 DataType = typeof(DateTime),
