@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ahbsd.flightaware.fr24Test"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ahbsd.lib.flight", "ahbsd.lib.flight\ahbsd.lib.flight.csproj", "{244F8702-E335-471A-9A78-D6E9579F925D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ahbsd.network.check", "ahbsd.network.check\ahbsd.network.check.csproj", "{C213808A-B26F-48F6-B747-BA67C61AE0C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ahbsd.network.check.test", "ahbsd.network.check.test\ahbsd.network.check.test.csproj", "{4D01B3AF-D12E-4C99-B8BD-F4B0A7A67431}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +49,14 @@ Global
 		{244F8702-E335-471A-9A78-D6E9579F925D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{244F8702-E335-471A-9A78-D6E9579F925D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{244F8702-E335-471A-9A78-D6E9579F925D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C213808A-B26F-48F6-B747-BA67C61AE0C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C213808A-B26F-48F6-B747-BA67C61AE0C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C213808A-B26F-48F6-B747-BA67C61AE0C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C213808A-B26F-48F6-B747-BA67C61AE0C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D01B3AF-D12E-4C99-B8BD-F4B0A7A67431}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D01B3AF-D12E-4C99-B8BD-F4B0A7A67431}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D01B3AF-D12E-4C99-B8BD-F4B0A7A67431}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D01B3AF-D12E-4C99-B8BD-F4B0A7A67431}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
