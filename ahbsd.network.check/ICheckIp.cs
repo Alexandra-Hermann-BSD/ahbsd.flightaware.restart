@@ -17,7 +17,8 @@ namespace ahbsd.network.check
         /// <summary>
         /// Checks if the given IP is available.
         /// </summary>
+        /// <param name="timeout">[optional] the wished timeout in ms, by default 100ms are selected</param>
         /// <returns><c>true</c> if the given IP is reachable, otherwise <c>false</c></returns>
-        bool TestPing();
+        bool TestPing(int timeout=100);
     }
 }

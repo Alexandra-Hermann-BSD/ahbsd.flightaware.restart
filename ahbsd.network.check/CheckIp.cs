@@ -19,20 +19,20 @@ namespace ahbsd.network.check
         /// <summary>
         /// Constructor with a given IP-Address or hostname.
         /// </summary>
-        /// <param name="adress">The given IP-Address or hostname</param>
-        public CheckIp(string adress)
+        /// <param name="address">The given IP-Address or hostname</param>
+        public CheckIp(string address)
         {
             ping = new Ping();
             IpAddresses = new List<IPAddress>();
-            IPAddress ip = IPAddress.TryParse(adress, out IPAddress tmpIp) ? tmpIp : null;
+            IPAddress ip = IPAddress.TryParse(address, out IPAddress tmpIp) ? tmpIp : null;
 
             if (ip != null)
             {
                 IpAddresses.Add(ip);
             }
-            else if (!string.IsNullOrEmpty(adress))
+            else if (!string.IsNullOrEmpty(address))
             {
-                SetIpAddress(adress);
+                SetIpAddress(address);
             }
             
         }
@@ -51,43 +51,38 @@ namespace ahbsd.network.check
             }
             catch (Exception e)
             {
-                Console.WriteLine($"[DoResolve] Exception: {e}");
+                Console.WriteLine($"[DoResolve] Exception: {e.Message}");
             }
             
         }
         
+        #region implementation of ICheckIp
         /// <summary>
-        /// Gets the IP-Adress.
+        /// Gets the IP-Address.
         /// </summary>
-        /// <value>The IP-Adress</value>
+        /// <value>The IP-Address</value>
         public IList<IPAddress> IpAddresses { get; private set; }
 
         /// <summary>
-        /// Checks if the given IP is available.
+        /// Checks if the given IP is reachable.
         /// </summary>
+        /// <param name="timeout">[optional] the wished timeout in ms, by default 100ms are selected</param>
         /// <returns><c>true</c> if the given IP is reachable, otherwise <c>false</c></returns>
-        public bool TestPing()
+        public bool TestPing(int timeout = 100)
         {
             IList<PingReply> results = new List<PingReply>();
 
-            if (IpAddresses != null)
+            // ReSharper disable once InvertIf
+            if (IpAddresses?.Count > 0)
             {
                 foreach (IPAddress address in IpAddresses)
                 {
-                    results.Add(ping.Send(address, 100));
+                    results.Add(ping.Send(address, timeout));
                 }
             }
 
-            bool result = false;
-            foreach (PingReply reply in results)
-            {
-                if (reply.Status == IPStatus.Success)
-                {
-                    result = true;
-                }
-            }
-
-            return result;
+            return results.Any(reply => reply.Status == IPStatus.Success);
         }
+        #endregion
     }
 }
