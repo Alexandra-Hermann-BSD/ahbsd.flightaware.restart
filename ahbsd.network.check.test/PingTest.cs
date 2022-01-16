@@ -21,5 +21,18 @@ namespace ahbsd.network.check.test
             ICheckIp checkIp = new CheckIp(address);
             Assert.Equal(expectedConnect, checkIp.TestPing());
         }
+        
+        
+        [Theory]
+        [InlineData("127.0.0.1", 5, true)]
+        [InlineData("localhost", 8, true)]
+        [InlineData("www.google.de", 100, true)]
+        [InlineData("www.google.de", 1, false)] // this should be nearly impossible...
+        [InlineData("123.456.789.300", 600, false)]
+        public void PingIpWithTimeout(string address, int timeout, bool expectedConnect)
+        {
+            ICheckIp checkIp = new CheckIp(address);
+            Assert.Equal(expectedConnect, checkIp.TestPing(timeout));
+        }
     }
 }
