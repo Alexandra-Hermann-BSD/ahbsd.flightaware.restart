@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Net;
+using ahbsd.lib.TLDCheck;
 
 namespace ahbsd.network.check
 {
@@ -11,6 +12,16 @@ namespace ahbsd.network.check
     /// </summary>
     public class CheckIp : ICheckIp
     {
+        /// <summary>
+        /// Static list of TLD's from IANA.
+        /// </summary>
+        private static IIANA_TLD tld;
+
+        /// <summary>
+        /// Static constructor to enable the TLD-List <see cref="tld"/>.
+        /// </summary>
+        static CheckIp() => tld = new IANA_TLD(waitToReload: new TimeSpan(hours: 3, minutes: 0, seconds: 0));
+
         /// <summary>
         /// The ping object
         /// </summary>
@@ -32,7 +43,11 @@ namespace ahbsd.network.check
             }
             else if (!string.IsNullOrEmpty(address))
             {
-                SetIpAddress(address);
+                IList<string> parts = address.Split('.').ToList();
+                if (tld.CheckTLD(parts.Last()) || address.ToLower().Equals("localhost"))
+                {
+                    SetIpAddress(address);
+                }
             }
             
         }
@@ -43,17 +58,8 @@ namespace ahbsd.network.check
         /// <param name="host">The given host</param>
         private void SetIpAddress(string host)
         {
-            try
-            {
-                IPHostEntry hostEntry = Dns.GetHostEntry(host);
-
-                IpAddresses = hostEntry.AddressList.ToList();
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine($"[DoResolve] Exception: {e.Message}");
-            }
-            
+            IPHostEntry hostEntry = Dns.GetHostEntry(host);
+            IpAddresses = hostEntry.AddressList.ToList();
         }
         
         #region implementation of ICheckIp
