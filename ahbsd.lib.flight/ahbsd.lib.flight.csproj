@@ -4,6 +4,14 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <DocumentationFile>bin\Debug\netcoreapp3.1\ahbsd.lib.flight.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DocumentationFile>bin\Release\netcoreapp3.1\ahbsd.lib.flight.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="ahbsd.lib" />
   </ItemGroup>
@@ -11,10 +19,5 @@
     <PackageReference Include="ahbsd.lib" Version="1.4.0" />
     <PackageReference Include="SQLite" Version="3.13.0" />
     <PackageReference Include="sqlite-net-pcl" Version="1.8.116" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="..\tempdata.sqlite">
-      <Link>tempdata.sqlite</Link>
-    </Content>
   </ItemGroup>
 </Project>
