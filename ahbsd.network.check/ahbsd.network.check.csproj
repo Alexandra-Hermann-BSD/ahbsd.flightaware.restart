@@ -4,4 +4,19 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Update="NetworkDevices.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>NetworkDevices.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="NetworkDevices.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>NetworkDevices.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
 </Project>
