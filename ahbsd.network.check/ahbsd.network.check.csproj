@@ -2,6 +2,27 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageId>ahbsd.network.check_core3.1</PackageId>
+    <Title>Network address reachable?</Title>
+    <Authors>Alexandra Hermann</Authors>
+    <Description>A Simple check, if a network address is reachable</Description>
+    <Copyright>Copyright © 2022 by Alexandra Hermann – Beratung, Software, design</Copyright>
+    <PackageProjectUrl>https://github.com/Alexandra-Hermann-BSD/ahbsd.flightaware.restart/tree/master/ahbsd.network.check</PackageProjectUrl>
+    <PackageLicenseUrl>https://www.apache.org/licenses/LICENSE-2.0</PackageLicenseUrl>
+    <PackageIconUrl>http://www.hermann-bsd.de/favicon.ico</PackageIconUrl>
+    <RepositoryUrl>https://github.com/Alexandra-Hermann-BSD/ahbsd.flightaware.restart/tree/master/ahbsd.network.check</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <DocumentationFile>bin\Debug\netcoreapp3.1\ahbsd.network.check.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <DocumentationFile>bin\Release\netcoreapp3.1\ahbsd.network.check.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
