@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using System.ComponentModel;
+using Xunit;
 
 namespace ahbsd.network.check.test
 {
@@ -33,6 +34,22 @@ namespace ahbsd.network.check.test
         {
             ICheckIp checkIp = new CheckIp(address);
             Assert.Equal(expectedConnect, checkIp.TestPing(timeout));
+        }
+        
+        [Theory]
+        [InlineData("127.0.0.1", 5, true)]
+        [InlineData("localhost", 8, true)]
+        [InlineData("www.google.de", 100, true)]
+        [InlineData("www.google.de", 1, false)] // this should be nearly impossible...
+        [InlineData("123.456.789.300", 600, false)]
+        public void PingIpWithTimeoutAndContainer(string address, int timeout, bool expectedConnect)
+        {
+            IContainer container = new Container();
+            CheckIpComponent checkIp1 = new CheckIpComponent(container, address);
+            ICheckIp checkIp2 = new CheckIpComponent(address);
+            Assert.Equal(expectedConnect, checkIp1.TestPing(timeout));
+            Assert.Equal(expectedConnect, checkIp2.TestPing(timeout));
+            Assert.True(container.Components[0].Equals(checkIp1));
         }
     }
 }
