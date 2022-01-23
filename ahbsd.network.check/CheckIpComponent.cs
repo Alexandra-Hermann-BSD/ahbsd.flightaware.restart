@@ -62,6 +62,14 @@ namespace ahbsd.network.check
         /// <param name="timeout">[optional] the wished timeout in ms, by default 100ms are selected</param>
         /// <returns><c>true</c> if the given IP is reachable, otherwise <c>false</c></returns>
         public bool TestPing(int timeout = 100) => checker.TestPing(timeout);
+
+        /// <summary>
+        /// Gets the Aliases, if available.
+        /// </summary>
+        /// <value>The Aliases</value>
+        [ReadOnly(true)]
+        public IReadOnlyList<string> Aliases => checker.Aliases;
+
         #endregion
     }
 }

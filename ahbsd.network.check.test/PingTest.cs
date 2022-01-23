@@ -39,7 +39,7 @@ namespace ahbsd.network.check.test
         [Theory]
         [InlineData("127.0.0.1", 5, true)]
         [InlineData("localhost", 8, true)]
-        [InlineData("www.google.de", 100, true)]
+        [InlineData("www.google.de", 300, true)]
         [InlineData("www.google.de", 1, false)] // this should be nearly impossible...
         [InlineData("123.456.789.300", 600, false)]
         public void PingIpWithTimeoutAndContainer(string address, int timeout, bool expectedConnect)
@@ -50,6 +50,8 @@ namespace ahbsd.network.check.test
             Assert.Equal(expectedConnect, checkIp1.TestPing(timeout));
             Assert.Equal(expectedConnect, checkIp2.TestPing(timeout));
             Assert.True(container.Components[0].Equals(checkIp1));
+            if (expectedConnect)
+                Assert.True(checkIp1.IpAddresses.Count >= 0);
         }
     }
 }

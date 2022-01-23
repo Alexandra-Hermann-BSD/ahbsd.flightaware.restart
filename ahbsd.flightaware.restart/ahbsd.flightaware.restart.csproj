@@ -8,6 +8,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ahbsd.flightaware.fr24\ahbsd.flightaware.fr24.csproj" />
     <ProjectReference Include="..\ahbsd.flightaware.piaware\ahbsd.flightaware.piaware.csproj" />
+    <ProjectReference Include="..\ahbsd.network.check\ahbsd.network.check.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="ahbsd.lib" />

@@ -18,10 +18,16 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="LocalAddress" xml:space="preserve">
-        <value>localhost</value>
+    <data name="LocalConnectionAvailable" xml:space="preserve">
+        <value>Local connection works</value>
     </data>
-    <data name="GlobalAddress" xml:space="preserve">
-        <value>www.google.de</value>
+    <data name="LocalConnectionNotAvailable" xml:space="preserve">
+        <value>Local connection not available</value>
+    </data>
+    <data name="ExternalConnectionAvailable" xml:space="preserve">
+        <value>Internet connection available</value>
+    </data>
+    <data name="ExternalConnectionNotAvailable" xml:space="preserve">
+        <value>Internet connection not available</value>
     </data>
 </root>

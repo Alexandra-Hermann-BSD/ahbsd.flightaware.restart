@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Net;
+using System.Threading.Tasks;
+using System.Diagnostics.CodeAnalysis;
 using ahbsd.lib.TLDCheck;
 
 namespace ahbsd.network.check
@@ -15,6 +18,8 @@ namespace ahbsd.network.check
         /// <summary>
         /// Static list of TLD's from IANA.
         /// </summary>
+        [SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>")]
+        // ReSharper disable once FieldCanBeMadeReadOnly.Local
         private static IIANA_TLD tld;
 
         /// <summary>
@@ -26,20 +31,41 @@ namespace ahbsd.network.check
         /// The ping object
         /// </summary>
         private readonly Ping ping;
-        
+
+        /// <summary>
+        /// The HostEntry, if available.
+        /// </summary>
+        private IPHostEntry hostEntry;
+
+        /// <summary>
+        /// Protected default constructor.
+        /// </summary>
+        /// <remarks>Needed for all other constructors.</remarks>
+        protected CheckIp()
+        {
+            ping = new Ping();
+            IpAddresses = new List<IPAddress>();
+
+            ping.PingCompleted += Ping_PingCompleted;
+        }
+
+        private void Ping_PingCompleted(object sender, PingCompletedEventArgs e)
+        {
+            //
+        }
+
         /// <summary>
         /// Constructor with a given IP-Address or hostname.
         /// </summary>
         /// <param name="address">The given IP-Address or hostname</param>
         public CheckIp(string address)
+            : this()
         {
-            ping = new Ping();
-            IpAddresses = new List<IPAddress>();
             IPAddress ip = IPAddress.TryParse(address, out IPAddress tmpIp) ? tmpIp : null;
 
             if (ip != null)
             {
-                IpAddresses.Add(ip);
+                SetIpAddress(ip);
             }
             else if (!string.IsNullOrEmpty(address))
             {
@@ -51,6 +77,26 @@ namespace ahbsd.network.check
             }
             
         }
+        
+        /// <summary>
+        /// Constructor with a given IP-Address or hostname.
+        /// </summary>
+        /// <param name="address">The given IP-Address or hostname</param>
+        /// <exception cref="ArgumentNullException">If the given IP-Address is <c>null</c></exception>
+        public CheckIp(IPAddress address)
+            : this()
+        {
+
+            if (address != null)
+            {
+                SetIpAddress(address);
+            }
+            else 
+            {
+                throw new ArgumentNullException($"The given IPAddress is unfortunatly null ('{address}')");
+            }
+            
+        }
 
         /// <summary>
         /// Try's to get all IP-Addresses of a host.
@@ -58,8 +104,30 @@ namespace ahbsd.network.check
         /// <param name="host">The given host</param>
         private void SetIpAddress(string host)
         {
-            IPHostEntry hostEntry = Dns.GetHostEntry(host);
+            hostEntry = Dns.GetHostEntry(host);
+            
             IpAddresses = hostEntry.AddressList.ToList();
+        }
+
+        /// <summary>
+        /// Adds the given IP-Address to the list of Addresses.
+        /// </summary>
+        /// <param name="address">The given IP-Address</param>
+        private void SetIpAddress(IPAddress address)
+        {
+            try
+            {
+                hostEntry = Dns.GetHostEntry(address);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"A {e.GetType().Name} happened: {e.Message}");
+            }
+
+            if (!IpAddresses.Contains(address))
+            {
+                IpAddresses.Add(address);
+            }
         }
         
         #region implementation of ICheckIp
@@ -68,6 +136,13 @@ namespace ahbsd.network.check
         /// </summary>
         /// <value>The IP-Address</value>
         public IList<IPAddress> IpAddresses { get; private set; }
+
+        /// <summary>
+        /// Gets the Aliases, if available.
+        /// </summary>
+        /// <value>The Aliases</value>
+        [ReadOnly(true)]
+        public IReadOnlyList<string> Aliases => (IReadOnlyList<string>)hostEntry?.Aliases.ToList();
 
         /// <summary>
         /// Checks if the given IP is reachable.
@@ -90,5 +165,7 @@ namespace ahbsd.network.check
             return results.Any(reply => reply.Status == IPStatus.Success);
         }
         #endregion
+        
+        
     }
 }
