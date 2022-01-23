@@ -15,17 +15,31 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Net.Mail;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Net;
+using System.Runtime.Serialization;
+using System.Text;
 
 namespace ahbsd.network.check
 {
     /// <summary>
     /// Class that holds the hosts to check.
     /// </summary>
+    [Serializable]
+    [SuppressMessage("ReSharper", "SuggestVarOrType_SimpleTypes")]
     public class CheckHosts : Dictionary<CheckArea, IDictionary<string, ICheckIp>> , ICheckHosts
     {
+        /// <summary>
+        /// A Constructor for Serialization
+        /// </summary>
+        /// <param name="info">The serialization info</param>
+        /// <param name="context">The straming context</param>
+        protected CheckHosts(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+            //
+        }
         /// <summary>
         /// Constructor
         /// </summary>
@@ -151,8 +165,6 @@ namespace ahbsd.network.check
             AddHost(checkArea, address);
         }
 
-
-
         /// <summary>
         /// Gets the first findable <see cref="ICheckIp"/> by it's <see cref="IPAddress"/>.
         /// </summary>
@@ -161,11 +173,12 @@ namespace ahbsd.network.check
         public ICheckIp GetCheckByAddress(IPAddress address)
         {
             ICheckIp result = null;
-
-            foreach (CheckArea area in Keys)
+            foreach (IDictionary<string, ICheckIp> areaDict in from CheckArea area in Keys
+                                     let areaDict = this[area]
+                                     select areaDict)
             {
-                IDictionary<string, ICheckIp> areaDict = this[area];
-                foreach (var entry in areaDict.Where(entry => entry.Value.IpAddresses.Contains(address)))
+                foreach (KeyValuePair<string, ICheckIp> entry in areaDict
+                    .Where(entry => entry.Value.IpAddresses.Contains(address)))
                 {
                     result = entry.Value;
                 }
@@ -175,7 +188,7 @@ namespace ahbsd.network.check
                     break;
                 }
             }
-            
+
             return result;
         }
 
@@ -187,11 +200,12 @@ namespace ahbsd.network.check
         public ICheckIp GetCheckByName(string name)
         {
             ICheckIp result = null;
-            
-            foreach (CheckArea area in Keys)
+            foreach (IDictionary<string, ICheckIp> areaDict in from CheckArea area in Keys
+                                     let areaDict = this[area]
+                                     select areaDict)
             {
-                IDictionary<string, ICheckIp> areaDict = this[area];
-                foreach (var entry in areaDict.Where(entry => entry.Key.Equals(name)))
+                foreach (KeyValuePair<string, ICheckIp> entry in areaDict
+                    .Where(entry => entry.Key.Equals(name)))
                 {
                     result = entry.Value;
                 }
@@ -201,10 +215,61 @@ namespace ahbsd.network.check
                     break;
                 }
             }
-            
+
             return result;
         }
         #endregion
+
+        /// <summary>
+        /// Gets a short description of this <see cref="ICheckHosts"/> object.
+        /// </summary>
+        /// <returns>A short description of this <see cref="ICheckHosts"/> object</returns>
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            SetAreaInfo(sb);
+            SetHostsAmount(sb);
+
+            return sb.ToString();
+        }
         
+        #region private methods for ToString()
+        /// <summary>
+        /// Sets the area info for <see cref="ToString()"/>
+        /// </summary>
+        /// <param name="sb">The <see cref="StringBuilder"/> to fill</param>
+        private void SetAreaInfo(StringBuilder sb)
+        {
+            int countAreas = Keys.Count;
+            string areas = countAreas == 1
+                ? $"[{countAreas} Area]: "
+                : $"[{countAreas} Areas]: ";
+            sb.Append(areas);
+
+            foreach (CheckArea area in Keys)
+            {
+                sb.Append(area);
+                if (--countAreas > 1) { sb.Append(", "); }
+            }
+
+            sb.AppendLine();
+        }
+
+        /// <summary>
+        /// Adds the amount of Host for each area.
+        /// </summary>
+        /// <param name="sb">The <see cref="StringBuilder"/> to fill</param>
+        private void SetHostsAmount(StringBuilder sb)
+        {
+            foreach (CheckArea area in Keys)
+            {
+                sb.Append($"[Area {area}]: ");
+                int c = this[area].Count;
+                sb.Append($"{c} ");
+                sb.AppendLine(c == 1 ? "Host" : "Hosts");
+            }
+        }
+        #endregion
     }
 }
