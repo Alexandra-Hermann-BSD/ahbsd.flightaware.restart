@@ -142,7 +142,24 @@ namespace ahbsd.network.check
         /// </summary>
         /// <value>The Aliases</value>
         [ReadOnly(true)]
-        public IReadOnlyList<string> Aliases => (IReadOnlyList<string>)hostEntry?.Aliases.ToList();
+        public IReadOnlyList<string> Aliases
+        {
+            get
+            {
+                IReadOnlyList<string> result = null;
+
+                if (hostEntry != null && hostEntry.Aliases.Length > 0)
+                {
+                    result = hostEntry.Aliases.ToList();
+                }
+                else if (hostEntry != null && hostEntry.Aliases.Length == 0)
+                {
+                    result = new List<string>();
+                }
+                
+                return result;
+            }
+        }
 
         /// <summary>
         /// Checks if the given IP is reachable.
