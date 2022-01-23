@@ -51,7 +51,7 @@ namespace ahbsd.network.check.test
             Assert.Equal(expectedConnect, checkIp2.TestPing(timeout));
             Assert.True(container.Components[0].Equals(checkIp1));
             if (expectedConnect)
-                Assert.True(checkIp1.IpAddresses.Count >= 0);
+                Assert.True(checkIp1.IpAddresses.Count > 0);
         }
     }
 }

@@ -102,7 +102,7 @@ namespace ahbsd.network.check.test
             }
             catch (Exception e)
             {
-                
+                //
             }
 
             if (checkIp != null && expectedFind)

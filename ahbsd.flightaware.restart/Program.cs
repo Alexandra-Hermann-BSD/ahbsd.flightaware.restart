@@ -28,23 +28,13 @@ namespace ahbsd.flightaware.restart
             if (StartArguments?.Count > 0) { ReactOnArguments(); }
             
             ICheckConnections checks = new CheckConnections();
+            
+            Console.WriteLine(checks.LocalConnectionStatus);
+            Console.WriteLine(checks.ExternalConnectionStatus);
 
-            if (checks.IsGatewayReachable)
+            if (checks.IsGatewayReachable && checks.IsAnyExternReachable)
             {
-                Console.WriteLine(checks.LocalConnectionStatus);
-
-                if (checks.IsAnyExternReachable)
-                {
-                    Console.WriteLine(checks.ExternalConnectionStatus);
-                }
-                else
-                {
-                    Console.WriteLine(checks.ExternalConnectionStatus);
-                }
-            }
-            else
-            {
-                Console.WriteLine(checks.LocalConnectionStatus);
+                //    
             }
         }
 
