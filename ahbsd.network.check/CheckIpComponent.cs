@@ -70,6 +70,23 @@ namespace ahbsd.network.check
         [ReadOnly(true)]
         public IReadOnlyList<string> Aliases => checker.Aliases;
 
+        /// <summary>
+        /// Gets the minimum round trip time.
+        /// </summary>
+        /// <value>The minimum round trip time</value>
+        public long MinRoundTripTime => checker.MinRoundTripTime;
+
+        /// <summary>
+        /// Gets the maximum round trip time.
+        /// </summary>
+        /// <value>The maximum round trip time</value>
+        public long MaxRoundTripTime => checker.MaxRoundTripTime;
+
+        /// <summary>
+        /// Gets the average round trip time.
+        /// </summary>
+        /// <value>The average round trip time</value>
+        public double AverageRoundTripTime => checker.AverageRoundTripTime;
         #endregion
     }
 }

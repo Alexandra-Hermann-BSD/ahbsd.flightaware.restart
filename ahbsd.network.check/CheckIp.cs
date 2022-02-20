@@ -45,8 +45,19 @@ namespace ahbsd.network.check
         {
             ping = new Ping();
             IpAddresses = new List<IPAddress>();
+            ResetRoundTripStatistic();
 
             ping.PingCompleted += Ping_PingCompleted;
+        }
+
+        /// <summary>
+        /// Resets the variables for the round trip time statistics.
+        /// </summary>
+        private void ResetRoundTripStatistic()
+        {
+            MinRoundTripTime = 0L;
+            MaxRoundTripTime = 0L;
+            AverageRoundTripTime = 0D;
         }
 
         private void Ping_PingCompleted(object sender, PingCompletedEventArgs e)
@@ -156,7 +167,7 @@ namespace ahbsd.network.check
                 {
                     result = new List<string>();
                 }
-                
+
                 return result;
             }
         }
@@ -178,11 +189,60 @@ namespace ahbsd.network.check
                     results.Add(ping.Send(address, timeout));
                 }
             }
+            
+            CalculateRoundTripStatistic(results);
 
             return results.Any(reply => reply.Status == IPStatus.Success);
         }
+        
+        /// <summary>
+        /// Gets the minimum round trip time.
+        /// </summary>
+        /// <value>The minimum round trip time</value>
+        public long MinRoundTripTime { get; private set; }
+        
+        /// <summary>
+        /// Gets the maximum round trip time.
+        /// </summary>
+        /// <value>The maximum round trip time</value>
+        public long MaxRoundTripTime { get; private set;}
+        
+        /// <summary>
+        /// Gets the average round trip time.
+        /// </summary>
+        /// <value>The average round trip time</value>
+        public double AverageRoundTripTime { get; private set;}
         #endregion
-        
-        
+
+        /// <summary>
+        /// Calculates the statistics of the round trip times
+        /// </summary>
+        /// <param name="results">The ping replys</param>
+        private void CalculateRoundTripStatistic(IEnumerable<PingReply> results)
+        {
+            ResetRoundTripStatistic();
+
+            int counter = 0;
+            long roundTripSum = 0L;
+
+            foreach (PingReply reply in results)
+            {
+                if (reply.Status == IPStatus.Success)
+                {
+                    long tmpRoundTripTime = reply.RoundtripTime;
+                    if (tmpRoundTripTime > MaxRoundTripTime) 
+                    { MaxRoundTripTime = tmpRoundTripTime; }
+
+                    if (counter == 0 || tmpRoundTripTime < MinRoundTripTime) 
+                    { MinRoundTripTime = tmpRoundTripTime; }
+
+                    roundTripSum += tmpRoundTripTime;
+                    counter++;
+                }
+            }
+
+            AverageRoundTripTime = counter > 0 ? (roundTripSum / (double) counter) : 0D;
+        }
+
     }
 }
